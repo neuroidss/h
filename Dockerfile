@@ -21,6 +21,9 @@ LABEL maintainer="Hypothes.is Project and contributors"
 # Expose the default port.
 EXPOSE 5000
 
+# Start the web server by default
+CMD ["init-env", "supervisord", "-c" , "conf/supervisord.conf"]
+
 # Install system build and runtime dependencies.
 RUN apk add --no-cache \
     ca-certificates \
@@ -76,6 +79,4 @@ ENV PATH /var/lib/hypothesis/bin:$PATH
 ENV PYTHONIOENCODING utf_8
 ENV PYTHONPATH /var/lib/hypothesis:$PYTHONPATH
 
-# Start the web server by default
 USER hypothesis
-CMD ["init-env", "supervisord", "-c" , "conf/supervisord.conf"]
