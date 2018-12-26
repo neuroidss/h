@@ -18,6 +18,9 @@ RUN npm run build
 FROM alpine:3.7
 LABEL maintainer="Hypothes.is Project and contributors"
 
+# Expose the default port.
+EXPOSE 5000
+
 # Install system build and runtime dependencies.
 RUN apk add --no-cache \
     ca-certificates \
@@ -67,9 +70,6 @@ RUN [ -d .git ] && chown -R hypothesis:hypothesis .git || :
 
 # Copy frontend assets.
 COPY --from=build /build build
-
-# Expose the default port.
-EXPOSE 5000
 
 # Set the application environment
 ENV PATH /var/lib/hypothesis/bin:$PATH
