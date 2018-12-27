@@ -67,6 +67,11 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt \ 
   && apk del build-deps
 
+# Set the application environment
+ENV PATH /var/lib/hypothesis/bin:$PATH
+ENV PYTHONIOENCODING utf_8
+ENV PYTHONPATH /var/lib/hypothesis:$PYTHONPATH
+
 # Copy frontend assets.
 COPY --from=build /build build
 
@@ -75,10 +80,5 @@ COPY . .
 
 # If we're building from a git clone, ensure that .git is writeable
 RUN [ -d .git ] && chown -R hypothesis:hypothesis .git || :
-
-# Set the application environment
-ENV PATH /var/lib/hypothesis/bin:$PATH
-ENV PYTHONIOENCODING utf_8
-ENV PYTHONPATH /var/lib/hypothesis:$PYTHONPATH
 
 USER hypothesis
