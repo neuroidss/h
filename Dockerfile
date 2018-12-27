@@ -52,17 +52,19 @@ COPY conf/collectd.conf /etc/collectd/collectd.conf
 RUN mkdir /etc/collectd/collectd.conf.d \
  && chown hypothesis:hypothesis /etc/collectd/collectd.conf.d
 
-# Copy minimal data to allow installation of dependencies.
-COPY requirements.txt ./
-
-# Install build deps, build, and then clean up.
+# Install build deps and build.
 RUN apk add --no-cache --virtual build-deps \
     build-base \
     libffi-dev \
     postgresql-dev \
     python-dev \
-  && pip install --no-cache-dir -U pip supervisor \
-  && pip install --no-cache-dir -r requirements.txt \
+  && pip install --no-cache-dir -U pip supervisor 
+
+# Copy requirements.txt to allow installation of dependencies.
+COPY requirements.txt ./
+
+# Install python dependencies and cleanup build deps.
+RUN pip install --no-cache-dir -r requirements.txt \ 
   && apk del build-deps
 
 # Copy the rest of the application files.
